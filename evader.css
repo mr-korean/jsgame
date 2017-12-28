@@ -1,0 +1,51 @@
+#gameboyBody {
+    width: 420px;
+    height: 580px;
+    padding: 10px;
+    background-color: #faebd7;
+    border: 2px solid
+}
+
+#gameboyBody * {
+    text-align: center;
+}
+
+canvas {
+    border: 1px solid dimgray;
+    background-color: lightgray;
+}
+
+#controlPanel {
+    width: 200px;
+    padding: 10px;
+    background-color: indianred;
+    margin: auto;
+}
+
+#controlPanel button {
+    border: 1px solid black;
+    background-color: #faebd7;
+    width: 45px;
+    height: 45px;
+    font-size: 1.2em;
+}
+
+.makerTitle {
+    letter-spacing: 10px;
+    font-family: "BigNoodleTitling";
+    font-style: italic;
+    padding: 0;
+    margin: 5px;
+}
+
+@font-face {
+    font-family: NanumSquareWeb;
+    src: local(NanumSquareR),
+         local(NanumSquare),
+         url(NanumSquareR.eot?#iefix) format('embedded-opentype'),
+         url(NanumSquareR.woff) format('woff'),
+         url(NanumSquareR.ttf) format('truetype');
+    font-style: normal;
+    font-weight: normal;
+    unicode-range: U+0-10FFFF;
+  }

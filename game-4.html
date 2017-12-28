@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body onload="init()">
+    <button id="clr">clear</button>
+    <button id="box">add box</button>
+    <button id="move">move box</button>
+    <script>
+        var boxs = [];
+
+        function init() {
+            container.start();
+            // box = new component(30, 30, "red", 10, 120);
+        }
+
+        var container = {
+            boxId : 0,
+            canvas: document.createElement("canvas"),
+            btnClr: document.getElementById("clr"),
+            btnAdd: document.getElementById("box"),
+            btnMove: document.getElementById("move"),
+            start: function () {
+                this.canvas.width = 400;
+                this.canvas.height = 200;
+                this.canvas.style.border = "1px solid gray";
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.btnClr.addEventListener("click", function () {
+                        return container.clear();
+                    }),
+                    this.btnAdd.addEventListener("click", function () {
+                        return container.addBox()
+                    }),
+                    this.btnMove.addEventListener("click", function () {
+                        return container.moveBox()
+                    })
+                // 
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            addBox: function () {
+                var obj = container.canvas;
+                var bxy = randXY(obj.width, obj.height);
+                var rc = randColor();
+                bid = container.boxId + 1;
+                var box = new component(30, 30, "rgb(" + rc.cr + "," + rc.cg + "," + rc.cb + ")", bxy.rx, bxy.ry);
+                boxs.push(box);
+                console.log(boxs.length);
+            },
+            moveBox: function () {
+                this.interval = setInterval(updateGameArea, 20);
+            }
+        }
+
+        function component(width, height, color, x, y) {
+            this.width = width;
+            this.height = height;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                ctx = container.context;
+                ctx.fillStyle = color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            this.update();
+        }
+
+        function randXY(px, py) {
+            return {
+                rx: Math.floor(Math.random() * px),
+                ry: Math.floor(Math.random() * py)
+            };
+        }
+
+        function randColor(r, g, b) {
+            return {
+                cr: Math.floor(Math.random() * 256),
+                cg: Math.floor(Math.random() * 256),
+                cb: Math.floor(Math.random() * 256)
+            }
+        }
+
+        function updateGameArea() {
+            container.clear();
+            for(var i = 0; i < boxs.length; i++) {
+                boxs[i].x += 1;
+                boxs[i].update();
+            }
+        }
+    </script>
+
+    <p>We have added a component to our game, a red square!</p>
+
+</body>
+
+</html>

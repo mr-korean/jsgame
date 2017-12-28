@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        canvas {
+            border: 1px solid dimgray;
+            background-color: lightgray;
+        }
+        #messagebox {
+            width: 400px;
+            border: 1px solid dimgray;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+    </style>
+    <title>야바위</title>
+</head>
+
+<body onload="gameReady()">
+    <div id="locationOfCanvas"></div>
+    <div id="messagebox">
+        <p id="message">돈 놓고 돈 먹기란다! 시작 버튼을 누르라구!</p>
+    </div>
+    <button onclick="gameStart()">시작</button>
+    <script>
+        var cup1, cup2, cup3, hiddenAnswer;
+
+        function gameReady() {
+            // 게임 시작 시 옵션.
+            screen.makeScreen();
+            cup1 = new component(50, 50, "dimgray", 70, 180);
+            cup2 = new component(50, 50, "dimgray", 170, 180);
+            cup3 = new component(50, 50, "dimgray", 270, 180);
+            cup1.respawn();
+            cup2.respawn();
+            cup3.respawn();
+            // 정답을 보여줘야 하므로 시작 시점엔 인터벌을 넣지 않는다.
+        };
+
+        var screen = {
+            // 게임 화면 설정
+            canvas: document.createElement("canvas"),
+            makeScreen: function () {
+                this.canvas.width = 400;
+                this.canvas.height = 400;
+                this.context = this.canvas.getContext("2d");
+                document.getElementById("locationOfCanvas").appendChild(this.canvas);
+            },
+            wipeScreen: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            gameOver: function () {
+                clearInterval(this.interval);
+            }
+        }
+
+        // ===============================================================
+        // 게임용 캐릭터 만들기
+        // ===============================================================
+        function component(width, height, color, x, y, type) {
+            this.type = type;
+            this.width = width;
+            this.height = height;
+            this.color = color;
+            this.x = x;
+            this.y = y;
+            this.boostX = 0;
+            this.boostY = 0;
+            this.respawn = function () {
+                icon = screen.context;
+                if (this.type === "text") // (텍스트일 경우)
+                {
+                    icon.font = this.width + " " + this.height;
+                    icon.fillStyle = color;
+                    icon.fillText(this.text, this.x, this.y);
+                }
+                else
+                {
+                    icon.fillStyle = this.color;
+                    icon.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+            this.moveThis = function () {
+                this.x += this.boostX;
+                this.y += this.boostY;
+            }
+            this.moveX = function (n) {
+                this.x += n;
+            }
+            this.moveY = function (n) {
+                this.y += n;
+            }
+            this.deadCondition = {
+                // (필수) 게임오버 조건
+            }
+            this.selected = false;
+        }
+
+        function updateScreen() {
+            screen.wipeScreen();
+            cup1.moveThis();
+            cup2.moveThis();
+            cup3.moveThis();
+            cup1.respawn();
+            cup2.respawn();
+            cup3.respawn();
+        }
+
+        function gameStart() {
+            selectOne();
+            document.getElementById("message").innerHTML = "빨간색 박스를 잘 봐둬.";
+            checkAnswer();
+            setTimeout(getReady, 3800);
+        }
+
+        function selectOne() {
+                cup1.selected = true;
+                cup2.selected = false;
+                cup3.selected = false;
+        }
+
+        function checkAnswer() {
+            if (cup1.selected == true)
+            {
+                cup1.color = "red";
+                updateScreen();
+                cup1.color = "dimgray";
+                setTimeout(updateScreen, 3000)
+            }
+        }
+
+        function getReady() {
+            document.getElementById("message").innerHTML = "이제부터 섞을 거야. 집중해!";
+            shuffleStart();
+        }
+
+        function shuffleStart() {
+            setInterval(updateScreen, 20);
+            shuffleCase1();
+        }
+
+        function shuffleCase1() {
+            // 지우고 다시 그리는 도중에 값이 계속 변해야 한다.
+            if (cup1.x >= 70 && cup1.x < 170)
+            {
+                cup1.boostX = 2;
+            }
+            else
+            {
+                cup1.boostX = 0;
+                cup1.x = 170;
+            }
+            // if (cup1.x >= 70 && cup1.x < 120)
+            //     {cup1.boostY -= 2;}
+            //     else if (cup1.x >= 121 && cup1.x < 170)
+            //     {cup1.boostY += 2;}
+            //     else if (cup1.x = 170)
+            //     {cup1.boostY = 0}
+
+            // if (cup1.x == 70 && cup2.x == 170) {}
+            // else if (cup1.x == 70 && cup3.x == 170) {}
+            // else if (cup2.x == 70 && cup1.x == 170) {}
+            // else if (cup2.x == 70 && cup3.x == 170) {}
+            // else if (cup3.x == 70 && cup1.x == 170) {}
+            // else if (cup3.x == 70 && cup2.px == 170) {}
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="evader.css">
+    <title>Document</title>
+</head>
+
+<body onload="startGame()">
+
+    <div id="gameboyBody">
+        <p class="makerTitle" style="font-size: 50px;">GAMEBOY™</p>
+        <div id="locationOfCanvas"></div>
+        <div id="controlPanel">
+            <button ontouchstart="moveUp()" onmouseup="stopNow()" onmousedown="moveUp()">↑</button>
+            <button ontouchstart="moveDown()" onmouseup="stopNow()" onmousedown="moveDown()">↓</button>
+            <button ontouchstart="moveLeft()" onmouseup="stopNow()" onmousedown="moveLeft()">←</button>
+            <button ontouchstart="moveRight()" onmouseup="stopNow()" onmousedown="moveRight()">→</button>
+        </div>
+        <p class="makerTitle" style="font-size: 30px;">MADE IN CHINA</p>
+    </div>
+    <p>종가네 오락실</p>
+    <p>가격 : 500원</p>
+
+
+
+
+
+    <script>
+        var player;
+        var barriers = [];
+        var score;
+
+        function startGame() {
+            // 게임 시작 시 옵션.
+            player = new component(40, 40, "dimgray", 180, 360);
+            score = new component("30px", "BigNoodleTitling", "white", 250, 30, "text");
+            screen.start();
+        }
+
+        var screen = {
+            // 게임 화면의 속성을 정리하는 공간.
+            canvas: document.createElement("canvas"),
+            start: function () {
+                this.canvas.width = 400;
+                this.canvas.height = 400;
+                this.context = this.canvas.getContext("2d");
+                document.getElementById("locationOfCanvas").appendChild(this.canvas);
+                this.FPS = 0;
+                this.interval = setInterval(updateScreen, 20); // 단위: 밀리세컨드
+            },
+            wipeScreen: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            gameover : function() {
+                clearInterval(this.interval);
+                // updateScreen으로 물체를 다시 뿌려줘야 하는데
+                // 인터벌을 멈춰버렸으므로 다시 생겨나지 않는다.
+                // 즉 사실상 게임 오버. 
+            }
+        }
+
+        function component(width, height, color, x, y, type) {
+            // 주인공과 적의 속성을 정리하는 공간.
+            this.type = type; // (도형인지 텍스트인지 구분)
+            this.width = width;
+            this.height = height;
+            this.boostX = 0;
+            this.boostY = 0;
+            this.x = x;
+            this.y = y;
+            this.respawn = function () {
+                icon = screen.context;
+                if (this.type == "text") // (텍스트일 경우)
+                {
+                    icon.font = this.width + " " + this.height;
+                    icon.fillStyle = color;
+                    icon.fillText(this.text, this.x, this.y);
+                }
+                else
+                {
+                    icon.fillStyle = color;
+                    icon.fillRect(this.x, this.y, this.width, this.height);
+                }
+                
+            }
+            this.movePlayer = function () {
+                this.x += this.boostX;
+                this.y += this.boostY;
+            }
+            this.youDead = function(rival) {
+                var myleft = this.x;
+                var myright = this.x + (this.width);
+                var mytop = this.y;
+                var mybottom = this.y + (this.height);
+                var rivalleft = rival.x;
+                var rivalright = rival.x + (rival.width);
+                var rivaltop = rival.y;
+                var rivalbottom = rival.y + (rival.height);
+                var crash = true; // 기본적으로 사망 상태, 안 닿으면 생존
+                if (
+                    (mybottom < rivaltop) || (mytop > rivalbottom) || (myright < rivalleft) || (myleft > rivalright)
+                    ) {crash = false;}  
+                return crash;
+            }
+        }
+
+        function updateScreen() {
+            // 물체를 실시간으로 뿌려주는 공간.
+            var screenWidth, Left, gap, minLeft, maxLeft, minGap, maxGap;
+            for (i = 0; i < barriers.length; i++)
+            {
+                if (player.youDead(barriers[i]))
+                {
+                    // 충돌시 사망
+                    screen.gameover();
+                    return;
+                }
+            }
+
+            screen.wipeScreen();
+            screen.FPS += 1;
+
+            // var randomInterval = Math.floor((Math.random() * 10) + 60 + 1);
+            // console.log(randomInterval);
+
+            // 장벽 재생성
+            if (screen.FPS == 1 || intervalLimit(55)) // 장벽 재생성 간격
+            {
+                screenWidth = screen.canvas.width;
+                // 1번 장벽의 길이
+                minLeft = 20;
+                maxLeft = 200;
+                Left = Math.floor(Math.random() * (maxLeft - minLeft) + minLeft + 1);
+                // (random은 0부터 시작하므로 나중에 최소값을 더해야 최소값부터 시작한다.)
+                // 2번 장벽과의 간격
+                minGap = 60;
+                maxGap = 80;
+                gap = Math.floor(Math.random() * (maxGap - minGap) + minGap + 1);
+                barriers.push(new component(Left, 10, "black", 0, 0)); // 왼쪽 장벽 생성 위치
+                barriers.push(new component(screenWidth - Left - gap, 10, "black", Left + gap, 0)); // 오른쪽 장벽 생성 위치
+            }
+            for (i = 0; i < barriers.length; i++)
+            {
+                barriers[i].y += 3;
+                barriers[i].respawn();
+            }
+            score.text = "SCORE: " + screen.FPS;
+            score.respawn();
+            player.movePlayer();
+            player.respawn();
+        }
+
+        function intervalLimit(n)
+        {
+
+            if ((screen.FPS / n) % 1 == 0)
+            {return true;}
+            return false;
+            // 정해진 프레임(n)과 일치하면, 즉 나머지가 0이면
+            // true를 도출한다.
+        }
+
+        function moveUp() {
+            if (player.y > 0)
+                {player.boostY -= 5;}
+            else {player.y = 0;}
+        }
+
+        function moveDown() {
+            if (player.y < 360)
+                {player.boostY += 5;}
+            else {player.y = 360;}
+        }
+
+        function moveLeft() {
+            if (player.x > 0)
+                {player.boostX -= 5;}
+            else {player.x = 0;}
+        }
+
+        function moveRight() {
+            if (player.x < 360)
+                {player.boostX += 5;}
+            else {player.x = 360;}
+        }
+
+        function stopNow() {
+            player.boostX = 0;
+            player.boostY = 0;
+        }
+    </script>
+</body>
+
+</html>

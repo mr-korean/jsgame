@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="myCanvas" width"200" height="200" style="border 1px solid">이 브라우저는 HTML5를 지원하지 않습니다.</canvas>
+    <script>
+    // 캔버스 준비
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    // 드로잉 시작
+    ctx.moveTo(0,0);
+    ctx.lineTo(200,100);
+    ctx.lineTo(0,200);
+    ctx.stroke();
+
+    ctx.beginPath();
+    // x,y,r,시작,방향
+    ctx.arc(200,100,50,0,Math.PI,false);
+    //ctx.stroke();
+    ctx.fill();
+
+
+    ctx.font = "50px Arial";
+    ctx.fillText("Point",10,100);
+    </script>
+</body>
+</html>
