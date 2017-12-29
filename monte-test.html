@@ -71,6 +71,13 @@
             this.y = y;
             this.boostX = 0;
             this.boostY = 0;
+            this.startX = 0;
+            this.middleX = 0;
+            this.goalX = 0;
+            // (필수) y축의 이동은 yLimit에서 벗어나지 않게 조작한다.
+            this.yLimit1 = 130;
+            this.yLimit2 = 180;
+            this.yLimit3 = 230;
             this.respawn = function () {
                 icon = screen.context;
                 if (this.type === "text") // (텍스트일 경우)
@@ -86,14 +93,16 @@
                 }
             }
             this.moveThis = function () {
-                this.x += this.boostX;
-                this.y += this.boostY;
-            }
-            this.moveX = function (n) {
-                this.x += n;
-            }
-            this.moveY = function (n) {
-                this.y += n;
+                if (this.x == this.goalX)
+                {
+                    this.boostX = 0;
+                    this.boostY = 0;
+                }
+                else
+                {
+                    this.x += this.boostX;
+                    this.y += this.boostY;
+                }
             }
             this.deadCondition = {
                 // (필수) 게임오버 조건
@@ -146,15 +155,42 @@
 
         function shuffleCase1() {
             // 지우고 다시 그리는 도중에 값이 계속 변해야 한다.
-            if (cup1.x >= 70 && cup1.x < 170)
+            if (cup1.x == 70 && cup1.y == 180)
             {
+                cup1.startX = 70;
+                cup1.middleX = 120;
+                cup1.goalX = 170;
                 cup1.boostX = 2;
+
+                if (cup1.x < cup1.middleX && cup1.y > cup1.yLimit1)
+                {
+                    cup1.boostY = -2;
+                }
+                else if (cup1.x == cup1.middleX && cup1.y == cup1.yLimit1)
+                {
+                    cup1.boostY = 0;
+                }
+                else if (cup1.x > cup1.middleX && cup1.y > cup1.yLimit1)
+                {
+                    cup1.boostY = 2;
+                }
             }
-            else
-            {
-                cup1.boostX = 0;
-                cup1.x = 170;
-            }
+
+
+
+                // if (cup1.y > cup1.goalY && cup1.x < 120)
+                // {cup1.boostY = -2;}
+                // else if (cup1.y == cup1.goalY && cup1.x == 120)
+                // {cup1.boostY = 0;}
+                // else if (cup1.y < cup1.goalY && cup1.x > 120 && cup1.x < 170)
+                // {cup1.boostY = 2;}
+
+            // else
+            // {
+            //     cup1.boostX = 0;
+            //     cup1.x = 170;
+            // }
+
             // if (cup1.x >= 70 && cup1.x < 120)
             //     {cup1.boostY -= 2;}
             //     else if (cup1.x >= 121 && cup1.x < 170)
