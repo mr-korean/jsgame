@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <div id="locationOfCanvas"></div> -->
+    <div id="messageBox">
+        <p id="message">시작 버튼을 눌러주세요.</p>
+    </div>
+    <button onclick="gameStart()">시작</button>
+    <br>
+    <button id="choose1" onclick="choose1()" style="visibility: hidden;">1</button>
+    <button id="choose2" onclick="choose2()" style="visibility: hidden;">2</button>
+    <button id="choose3" onclick="choose3()" style="visibility: hidden;">3</button>
+    <script>
+        var random1, random2, save1, save2;
+        var answer;
+        var cups = ["A", "B", "C"]
+        function gameStart() {
+            answer = (Math.floor(Math.random() * 3));
+            document.getElementById("message").innerHTML = "정답은 " + cups[answer] + "입니다. 잘 기억하세요."
+            setTimeout(shuffle, 3000);
+            setTimeout(question, 3000);
+        }
+        function shuffle() {
+            document.getElementById("message").innerHTML = "여차저차 섞는 중..."
+            for (i = 1; i < 6; i++)
+            {
+                // 배열은 0부터 시작한다는 걸 잊지 말 것
+                random1 = (Math.floor(Math.random() * 3));
+                random2 = (Math.floor(Math.random() * 3));
+                if (random1 !== random2)
+                {
+                    save1 = cups[random1];
+                    save2 = cups[random2];
+                    if (save1 !== save2)
+                    {
+                        cups[random2] = save1;
+                        cups[random1] = save2;
+                    }
+                }
+                console.log(cups);
+            };
+        }
+
+        function question() {
+            document.getElementById("message").innerHTML = "다 섞었습니다. " + cups[answer] + "는 몇 번 자리에 있을까요?";
+            document.getElementById("choose1").style.visibility = "visible";
+            document.getElementById("choose2").style.visibility = "visible";
+            document.getElementById("choose3").style.visibility = "visible";
+        }
+
+        function choose1() {
+            if (cups[0] == cups[answer])
+            {document.getElementById("message").innerHTML = "정답입니다!"}
+            else
+            {document.getElementById("message").innerHTML = "땡!"}
+        }
+        function choose2() {
+            if (cups[1] == cups[answer])
+            {document.getElementById("message").innerHTML = "정답입니다!"}
+            else
+            {document.getElementById("message").innerHTML = "땡!"}
+        }
+        function choose3() {
+            if (cups[2] == cups[answer])
+            {document.getElementById("message").innerHTML = "정답입니다!"}
+            else
+            {document.getElementById("message").innerHTML = "땡!"}
+        }
+    </script>
+</body>
+</html>

@@ -29,6 +29,7 @@
     <button onclick="gameStart()">시작</button>
     <script>
         var cup1, cup2, cup3, hiddenAnswer;
+        var sectA, sectB, sectC, sectD, sectE, sectF, sectG, sectH, sectI, sectJ, sectK, sectL;
 
         function gameReady() {
             // 게임 시작 시 옵션.
@@ -71,13 +72,16 @@
             this.y = y;
             this.boostX = 0;
             this.boostY = 0;
-            this.startX = 0;
-            this.middleX = 0;
+            this.x1 = 70;
+            this.x2 = 120;
+            this.x3 = 170;
+            this.x4 = 220;
+            this.x5 = 270;
             this.goalX = 0;
             // (필수) y축의 이동은 yLimit에서 벗어나지 않게 조작한다.
-            this.yLimit1 = 130;
-            this.yLimit2 = 180;
-            this.yLimit3 = 230;
+            this.y1 = 130;
+            this.y2 = 180;
+            this.y3 = 230;
             this.respawn = function () {
                 icon = screen.context;
                 if (this.type === "text") // (텍스트일 경우)
@@ -92,17 +96,33 @@
                     icon.fillRect(this.x, this.y, this.width, this.height);
                 }
             }
-            this.moveThis = function () {
-                if (this.x == this.goalX)
-                {
-                    this.boostX = 0;
-                    this.boostY = 0;
-                }
-                else
-                {
+            this.moveThis = function () {   
                     this.x += this.boostX;
                     this.y += this.boostY;
-                }
+            }
+            this.checkPosition = function () {
+
+                // if (this.x >= this.x1 && this.x < this.x2 && this.y > this.y1 && this.y <= this.y2)
+                // {sectA = true;}
+                // // else if (this.x == this.x2 && this.y == this.y1)
+                // // {sectB = true;}
+                // // else if (this.x > this.x2 && this.x <= this.x3 && this.y > this.y1 && this.y <= this.y2)
+                // // {sectC = true;}
+                // else
+                // {
+                //     sectA = false;
+                //     // sectB = false;
+                //     // sectC = false;
+                //     // sectD = false;
+                //     // sectE = false;
+                //     // sectF = false;
+                //     // sectG = false;
+                //     // sectH = false;
+                //     // sectI = false;
+                //     // sectJ = false;
+                //     // sectK = false;
+                //     // sectL = false;
+                // }
             }
             this.deadCondition = {
                 // (필수) 게임오버 조건
@@ -112,6 +132,13 @@
 
         function updateScreen() {
             screen.wipeScreen();
+            // (최중요) 여기서 x값과 y값을 먼저 파악하고, 뒤에 오는
+            // moveThis에서 값을 변경한다.
+            // 현재 상태는 상승/하강 중 '딱 하나만, 딱 한 번' 부르기 때문에
+            // 고장나는 것이다.
+            cup1.checkPosition();
+            cup2.checkPosition();
+            cup3.checkPosition();
             cup1.moveThis();
             cup2.moveThis();
             cup3.moveThis();
@@ -141,69 +168,74 @@
                 cup1.color = "dimgray";
                 setTimeout(updateScreen, 3000)
             }
+            else if (cup2.selected == true)
+            {
+                cup2.color = "red";
+                updateScreen();
+                cup2.color = "dimgray";
+                setTimeout(updateScreen, 3000)
+            }
+            else if (cup3.selected == true)
+            {
+                cup3.color = "red";
+                updateScreen();
+                cup3.color = "dimgray";
+                setTimeout(updateScreen, 3000)
+            }
         }
 
         function getReady() {
             document.getElementById("message").innerHTML = "이제부터 섞을 거야. 집중해!";
+            setInterval(updateScreen, 20);
             shuffleStart();
         }
 
         function shuffleStart() {
-            setInterval(updateScreen, 20);
             shuffleCase1();
         }
 
         function shuffleCase1() {
-            // 지우고 다시 그리는 도중에 값이 계속 변해야 한다.
-            if (cup1.x == 70 && cup1.y == 180)
-            {
-                cup1.startX = 70;
-                cup1.middleX = 120;
-                cup1.goalX = 170;
-                cup1.boostX = 2;
-
-                if (cup1.x < cup1.middleX && cup1.y > cup1.yLimit1)
-                {
-                    cup1.boostY = -2;
-                }
-                else if (cup1.x == cup1.middleX && cup1.y == cup1.yLimit1)
-                {
-                    cup1.boostY = 0;
-                }
-                else if (cup1.x > cup1.middleX && cup1.y > cup1.yLimit1)
-                {
-                    cup1.boostY = 2;
-                }
-            }
-
-
-
-                // if (cup1.y > cup1.goalY && cup1.x < 120)
-                // {cup1.boostY = -2;}
-                // else if (cup1.y == cup1.goalY && cup1.x == 120)
-                // {cup1.boostY = 0;}
-                // else if (cup1.y < cup1.goalY && cup1.x > 120 && cup1.x < 170)
-                // {cup1.boostY = 2;}
-
-            // else
+            // if (sectA == true)
             // {
-            //     cup1.boostX = 0;
-            //     cup1.x = 170;
+            //     cup1.boostX = 2; cup1.boostY = -2;
+            //     cup2.boostX = 2; cup2.boostY = -2;
+            //     cup3.boostX = 2; cup3.boostY = -2;
+            // }
+            // else if (sectB == true)
+            // {
+            //     cup1.boostX = 2; cup1.boostY = 0;
+            //     cup2.boostX = 2; cup2.boostY = 0;
+            //     cup3.boostX = 2; cup3.boostY = 0;
+            // }
+            // else if (sectC == true)
+            // {
+            //     cup1.boostX = 2; cup1.boostY = 2;
+            //     cup2.boostX = 2; cup2.boostY = 2;
+            //     cup3.boostX = 2; cup3.boostY = 2;
             // }
 
-            // if (cup1.x >= 70 && cup1.x < 120)
-            //     {cup1.boostY -= 2;}
-            //     else if (cup1.x >= 121 && cup1.x < 170)
-            //     {cup1.boostY += 2;}
-            //     else if (cup1.x = 170)
-            //     {cup1.boostY = 0}
+            // if (cup1.x == 70 && cup1.y == 180)
+            // {
+            //     cup1.goalX = 170;
+            //     cup1.boostX = 2;
 
-            // if (cup1.x == 70 && cup2.x == 170) {}
-            // else if (cup1.x == 70 && cup3.x == 170) {}
-            // else if (cup2.x == 70 && cup1.x == 170) {}
-            // else if (cup2.x == 70 && cup3.x == 170) {}
-            // else if (cup3.x == 70 && cup1.x == 170) {}
-            // else if (cup3.x == 70 && cup2.px == 170) {}
+            //     if (cup1.x < cup1.middleX && cup1.y > cup1.yLimit1)
+            //     {
+            //         cup1.boostY = -2;
+            //     }
+            //     else if (cup1.x == cup1.middleX && cup1.y == cup1.yLimit1)
+            //     {
+            //         cup1.boostY = 0;
+            //     }
+            //     else if (cup1.x > cup1.middleX && cup1.y > cup1.yLimit1)
+            //     {
+            //         cup1.boostY = 2;
+            //     }
+            // }
+        }
+        function checkPosition(n) {
+            n.x = x;
+            n.y = y;
         }
     </script>
 </body>
