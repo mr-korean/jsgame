@@ -19,10 +19,9 @@
     <button id="choose2" onclick="choose2()" style="visibility: hidden;">2</button>
     <button id="choose3" onclick="choose3()" style="visibility: hidden;">3</button>
     <script>
-        var random1, random2, save1, save2, answer;
-        var rotationLimit = 5;
-        var cups = ["A", "B", "C"]
-        var cupsChanged = ["", "", ""];
+        var random1, random2, position1, position2, position3, save1, save2, numbers, answer, cupsChanged;
+        var rotationLimit = 10; // 섞기 돌리는 횟수
+        var cups = ["A", "B", "C"];
 
         function gameStart() {
             answer = (Math.floor(Math.random() * 3));
@@ -32,7 +31,8 @@
         }
 
         function shuffle() {
-            document.getElementById("message").innerHTML = "여차저차 섞는 중..."
+            // (필수) 현재 배열과 섞어진 배열이 똑같으면 다시 섞는 함수를 돌리고,
+            // 두 배열이 다르면 섞어진 배열을 현재 배열에 투입한다.
             for (i = 1; i < (rotationLimit + 1); i++) {
                 selection();
                 if (cups == cupsChanged) {
@@ -46,17 +46,28 @@
         }
 
         function selection() {
-            random1 = (Math.floor(Math.random() * 3)); // 0 ~ 2
-            random2 = (Math.floor(Math.random() * 3)); // 0 ~ 1
-            if (random1 !== random2) {
-                save1 = cups[random1];
-                save2 = cups[random2];
-                if (save1 !== save2) {
-                    cups[random2] = save1;
-                    cups[random1] = save2;
-                }
-            }
-            console.log(cups);
+            numbers = [0, 1, 2];
+            cupsChanged = [0, 1, 2];
+            random1 = (Math.floor(Math.random() * 3));
+            position1 = numbers[random1];
+            numbers.splice(random1, 1);
+            random2 = (Math.floor(Math.random() * 2));
+            position2 = numbers[random2];
+            numbers.splice(random2, 1);
+            position3 = numbers[0];
+            // console.log(position1, position2, position3);
+            // 사용할 자릿수는 위와 같이 랜덤으로 구할 수 있음.
+            // 이 자릿수로 원래 값을 '저장'하고, 바꿀 자리에 '대입'하고, 새로운 배열에 '저장'하는 것이 중요함
+            
+            save1 = cups[position1];
+            save2 = cups[position2];
+            cups[position2] = save1;
+            cups[position1] = save2;
+            
+            cupsChanged[position1] = cups[position1];
+            cupsChanged[position2] = cups[position2];
+            cupsChanged[position3] = cups[position3];
+            console.log(cupsChanged);
         }
 
         function question() {
