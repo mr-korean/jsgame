@@ -120,7 +120,6 @@
         // (5) 게임을 시작한다.
         function getReady() {
             document.getElementById("message").innerHTML = "이제부터 섞겠습니다. 집중하세요!";
-            setInterval(updateScreen, 20);
             shuffle();
         }
 
@@ -130,7 +129,7 @@
         function shuffle() {
             for (i = 1; i < (rotationLimit + 1); i++) {
                 rotation();
-                if (cups == cupsChanged) {
+                if (cups == cupsChanged && (cups == ["A", "B", "C"] && i == rotationLimit + 1) ) {
                     rotation();
                 } else {
                     cups[0] = cupsChanged[0];
@@ -231,6 +230,8 @@
         // (?) 앞서 설정한 좌표값에 따라 컵을 움직인다.
         function setDestination() {
             // (중요) 설계도에 따라 컵을 특정 위치로 보낸다.
+            // setInterval(updateScreen, 20);
+            var makeInterval = setInterval(function(){ updateScreen() }, 20);
             if (cups[0] == "A")
             {cupA.goal = 70;}
             else if (cups[1] == "A")
@@ -251,6 +252,10 @@
             {cupC.goal = 170;}
             else if (cups[2] == "C")
             {cupC.goal = 270;}
+            setTimeout(stopNow, 2000);
+            function stopNow() {
+                clearInterval(makeInterval);    
+            }
         }
 
         // (?) 섞기 과정이 끝나면 질문을 던진다.
