@@ -229,64 +229,7 @@
 
         // (?) 앞서 설정한 좌표값에 따라 컵을 움직인다.
         function setDestination() {
-            // Q. 현재 골라인을 공유하고 있기 때문에 셋 다 한 점으로 모이게 된다.
-            // A1. 각 컵마다 골라인을 다르게 설정한다.
-            // 
-            if (cups[0] == "A" && cupsChanged[0] == "A") {
-                goal = 70;
-            } else if (cups[0] == "A" && cupsChanged[1] == "A") {
-                goal = 170;
-            } else if (cups[0] == "A" && cupsChanged[2] == "A") {
-                goal = 270;
-            } else if (cups[1] == "A" && cupsChanged[0] == "A") {
-                goal = 70;
-            } else if (cups[1] == "A" && cupsChanged[1] == "A") {
-                goal = 170;
-            } else if (cups[1] == "A" && cupsChanged[2] == "A") {
-                goal = 270;
-            } else if (cups[2] == "A" && cupsChanged[0] == "A") {
-                goal = 70;
-            } else if (cups[2] == "A" && cupsChanged[1] == "A") {
-                goal = 170;
-            } else if (cups[2] == "A" && cupsChanged[2] == "A") {
-                goal = 270;
-            } else if (cups[0] == "B" && cupsChanged[0] == "B") {
-                goal = 70;
-            } else if (cups[0] == "B" && cupsChanged[1] == "B") {
-                goal = 170;
-            } else if (cups[0] == "B" && cupsChanged[2] == "B") {
-                goal = 270;
-            } else if (cups[1] == "B" && cupsChanged[0] == "B") {
-                goal = 70;
-            } else if (cups[1] == "B" && cupsChanged[1] == "B") {
-                goal = 170;
-            } else if (cups[1] == "B" && cupsChanged[2] == "B") {
-                goal = 270;
-            } else if (cups[2] == "B" && cupsChanged[0] == "B") {
-                goal = 70;
-            } else if (cups[2] == "B" && cupsChanged[1] == "B") {
-                goal = 170;
-            } else if (cups[2] == "B" && cupsChanged[2] == "B") {
-                goal = 270;
-            } else if (cups[0] == "C" && cupsChanged[0] == "C") {
-                goal = 70;
-            } else if (cups[0] == "C" && cupsChanged[1] == "C") {
-                goal = 170;
-            } else if (cups[0] == "C" && cupsChanged[2] == "C") {
-                goal = 270;
-            } else if (cups[1] == "C" && cupsChanged[0] == "C") {
-                goal = 70;
-            } else if (cups[1] == "C" && cupsChanged[1] == "C") {
-                goal = 170;
-            } else if (cups[1] == "C" && cupsChanged[2] == "C") {
-                goal = 270;
-            } else if (cups[2] == "C" && cupsChanged[0] == "C") {
-                goal = 70;
-            } else if (cups[2] == "C" && cupsChanged[1] == "C") {
-                goal = 170;
-            } else if (cups[2] == "C" && cupsChanged[2] == "C") {
-                goal = 270;
-            }
+            // (중요) 설계도에 따라 컵을 특정 위치로 보낸다.
         }
 
         // (?) 섞기 과정이 끝나면 질문을 던진다.
