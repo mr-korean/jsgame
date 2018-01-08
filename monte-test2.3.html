@@ -33,7 +33,7 @@
     <button id="choose2" onclick="choose2()" style="visibility: hidden;">2</button>
     <button id="choose3" onclick="choose3()" style="visibility: hidden;">3</button>
     <script>
-        var random1, random2, position1, position2, position3, save1, save2, numbers, cupsChanged;
+        var random1, random2, position1, position2, position3, save1, save2, numbers, cupsChanged, makeInterval, hiddenAnswer;
         var rotationLimit = 10; // 섞기 돌리는 횟수
         var cups = ["A", "B", "C"];
 
@@ -49,9 +49,6 @@
             },
             wipeScreen: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            },
-            gameOver: function () {
-                clearInterval(this.interval);
             }
         }
 
@@ -127,21 +124,25 @@
         // 그리고 그 배치도대로 컵을 이동시킨다.
         // 정해진 횟수만큼 배치가 끝났다면 정답을 물어본다.
         function shuffle() {
+            // (중요) 이 시점에서 캔버스를 이용해 사용자에게 섞는 장면을 보여줘야 한다.
             for (i = 1; i < (rotationLimit + 1); i++) {
                 rotation();
-                if (cups == cupsChanged && (cups == ["A", "B", "C"] && i == rotationLimit + 1) ) {
+                if (cups == cupsChanged || (cups == ["A", "B", "C"] && i == rotationLimit)) {
                     rotation();
                 } else {
                     cups[0] = cupsChanged[0];
                     cups[1] = cupsChanged[1];
                     cups[2] = cupsChanged[2];
-                    console.log(cups);
                     setDestination();
-                    // (중요) 이 시점에서 캔버스를 이용해 사용자에게
-                    // 섞는 장면을 보여줘야 한다.
                 }
+                makeInterval = setInterval(updateScreen, 20); // (필요) 프레임 & 새로고침을 시작한다.
+                if (cupA.x == cupA.goal && cupB.x == cupB.goal && cupC.x == cupC.goal)
+                {setTimeout(function() { clearInterval(makeInterval) }, 6000)};
+                // 골라인에 왔는지를 따진다.
+                // 골라인에 다 오고 나면 프레임 & 새로고침을 중지한다.
+                console.log(cups);
             };
-            nowYouSeeMe();
+            answerMeNow();
         }
 
         // (6.1) 배치도를 만들기 위한 배열 섞기 세트
@@ -155,9 +156,6 @@
             position2 = numbers[random2];
             numbers.splice(random2, 1);
             position3 = numbers[0];
-            // console.log(position1, position2, position3);
-            // 사용할 자릿수는 위와 같이 랜덤으로 구할 수 있음.
-            // 이 자릿수로 원래 값을 '저장'하고, 바꿀 자리에 '대입'하고, 새로운 배열에 '저장'하는 것이 중요함
 
             save1 = cups[position1];
             save2 = cups[position2];
@@ -167,6 +165,31 @@
             cupsChanged[position1] = cups[position1];
             cupsChanged[position2] = cups[position2];
             cupsChanged[position3] = cups[position3];
+        }
+
+        // (6.2) 앞서 설정한 좌표값에 따라 컵을 움직인다.
+        function setDestination() {
+            // (중요) 설계도에 따라 컵을 특정 위치로 보낸다.
+            if (cups[0] == "A")
+            {cupA.goal = 70;}
+            else if (cups[1] == "A")
+            {cupA.goal = 170;}
+            else if (cups[2] == "A")
+            {cupA.goal = 270;}
+
+            if (cups[0] == "B")
+            {cupB.goal = 70;}
+            else if (cups[1] == "B")
+            {cupB.goal = 170;}
+            else if (cups[2] == "B")
+            {cupB.goal = 270;}
+
+            if (cups[0] == "C")
+            {cupC.goal = 70;}
+            else if (cups[1] == "C")
+            {cupC.goal = 170;}
+            else if (cups[2] == "C")
+            {cupC.goal = 270;}
         }
 
         // (※) 화면 새로고침. 움직이는 효과는 전부 여기에 있다.
@@ -227,39 +250,8 @@
             }
         }
 
-        // (?) 앞서 설정한 좌표값에 따라 컵을 움직인다.
-        function setDestination() {
-            // (중요) 설계도에 따라 컵을 특정 위치로 보낸다.
-            // setInterval(updateScreen, 20);
-            var makeInterval = setInterval(function(){ updateScreen() }, 20);
-            if (cups[0] == "A")
-            {cupA.goal = 70;}
-            else if (cups[1] == "A")
-            {cupA.goal = 170;}
-            else if (cups[2] == "A")
-            {cupA.goal = 270;}
-
-            if (cups[0] == "B")
-            {cupB.goal = 70;}
-            else if (cups[1] == "B")
-            {cupB.goal = 170;}
-            else if (cups[2] == "B")
-            {cupB.goal = 270;}
-
-            if (cups[0] == "C")
-            {cupC.goal = 70;}
-            else if (cups[1] == "C")
-            {cupC.goal = 170;}
-            else if (cups[2] == "C")
-            {cupC.goal = 270;}
-            setTimeout(stopNow, 2000);
-            function stopNow() {
-                clearInterval(makeInterval);    
-            }
-        }
-
         // (?) 섞기 과정이 끝나면 질문을 던진다.
-        function nowYouSeeMe() {
+        function answerMeNow() {
             document.getElementById("message").innerHTML = "다 섞었습니다. " + cups[hiddenAnswer] + "는 몇 번 자리에 있을까요?";
             document.getElementById("choose1").style.visibility = "visible";
             document.getElementById("choose2").style.visibility = "visible";
