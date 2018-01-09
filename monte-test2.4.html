@@ -48,7 +48,7 @@
         var random1, random2, position1, position2, position3, save1, save2, numbers, cupsChanged, shuffleCount, makeInterval, hiddenAnswer,
             finalAnswer;
         var currentScore = 0;
-        var rotationLimit = 10; // 섞기 돌리는 횟수
+        var rotationLimit = 1; // 섞기 돌리는 횟수
         var cups = ["A", "B", "C"];
 
         // (※) 화면 새로고침. 움직이는 효과는 전부 여기에 있다.
@@ -246,7 +246,7 @@
         };
 
         function rotationCheck() {
-            if (cups == cupsChanged || (cups == ["A", "B", "C"] && i == rotationLimit)) {
+            if (cupsChanged == cups || (cups == ["A", "B", "C"] && i == rotationLimit)) {
                 rotation();
             } else {
                 rotation();
@@ -340,7 +340,6 @@
             document.getElementById("choose1").style.visibility = "hidden";
             document.getElementById("choose2").style.visibility = "hidden";
             document.getElementById("choose3").style.visibility = "hidden";
-            cups = ["A", "B", "C"];
             updateScreen();
         }
     </script>
