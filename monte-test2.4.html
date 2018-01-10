@@ -200,7 +200,7 @@
         function shuffling() {
             document.getElementById("message").innerHTML = "이제부터 섞겠습니다. 집중하세요!";
             // ※ 인터벌은 맨 처음에 한 번 돌게 하고, 섞기가 전부 끝나면 멈추기로 한다.
-            makeInterval = setInterval(moveCups, 10);
+            makeInterval = setInterval(moveCups, 5);
 
             // ※ 전술한대로 for문은 인터벌 이전에 결과를 전부 내버리기 때문에, if를 이용해
             // 필요할 때만 결과를 도출하도록 한다.
@@ -213,7 +213,7 @@
                     rotationCheck();
                     setDestination();
                     shuffleCount++;
-                    waitCounter = 2000;
+                    waitCounter = 1000;
                     setTimeout(watchThis, waitCounter);
                     console.log("watchThis " + shuffleCount + "회 실시, " + cups);
                 } else {
@@ -225,8 +225,8 @@
         // (6.1) 설계도 만들기
         function rotation() {
             // 현재 결과값이 이전하고 같으면 다시 하는 부분을 여기에 넣는다.
-            numbers = [0, 1, 2];
-            cupsChanged = [0, 1, 2];
+            numbers = [0, 1, 2]; // 자리 배치용 배열
+            cupsChanged = ["cups를", "여기에", "덮어씌움"];
             random1 = (Math.floor(Math.random() * 3));
             position1 = numbers[random1];
             numbers.splice(random1, 1);
