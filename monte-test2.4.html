@@ -287,11 +287,11 @@
         // (?) 섞기 과정이 끝나면 질문을 던진다.
         function answerMeNow() {
             if (cups[0] == finalAnswer)
-            {youMissed = 0;}
-            else if (cups[1] == finalAnswer)
             {youMissed = 1;}
-            else if (cups[2] == finalAnswer)
+            else if (cups[1] == finalAnswer)
             {youMissed = 2;}
+            else if (cups[2] == finalAnswer)
+            {youMissed = 3;}
             clearInterval(makeInterval);
             // (혹시 모르니까) 인터벌 정지 함수를 다시 한 번 넣는다.
 
